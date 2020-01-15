@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from werkzeug.security import generate_password_hash, check_password_hash
 
-app = Flask(__name__, static_folder='../client/build/static', template_folder='../client/build')
+app = Flask(__name__, static_folder='client/build/static', template_folder='client/build')
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://{}:{}@{}/{}".format(os.environ.get('PGUSER'), os.environ.get('PGPASSWORD'), os.environ.get('PGHOST'), os.environ.get('PGDATABASE'))
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
