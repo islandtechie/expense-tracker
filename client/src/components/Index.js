@@ -2,17 +2,21 @@ import React from 'react';
 import { Link } from "react-router-dom";
 
 function Index() {
-    const submit = (e) => {
-        e.preventDefault();
-    }
-
+   
     const setUsername = (e) => {
         //AuthContext.username = e.target.value;
+        console.log(e.target.value);
     }
 
     const setPassword = (e) => {
         //AuthContext.password = e.target.value;
+        console.log(e.target.value);
     }
+
+    const onSubmit = () => {
+        alert('submit button clicked');
+    }                                                                                                                             
+
     return (
         <div className="index-content">
             <section className="app-info">
@@ -24,7 +28,7 @@ function Index() {
             </section>
             <section className="app-login">
                 <h2>Login</h2>
-                <form onSubmit={submit}>                    
+                <form onSubmit={onSubmit}>                    
                     <input 
                         type="text" 
                         name="username" 

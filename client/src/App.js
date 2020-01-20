@@ -4,12 +4,11 @@ import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom'
 import './App.css';
 import MainNav from './components/MainNav';
 import Index from './components/Index';
+import Home from './components/Home';
 
-import AuthState from '../src/context/auth/authState';
 
 function App() {
   return (
-    <AuthState>
       <Router>
         <div className="main-container">
           <header className="main-header">
@@ -18,6 +17,9 @@ function App() {
           </header>
           <div className="main-content">
             <Switch>
+              <Route path="/home">
+                  <Home />
+              </Route>
               <Route path="/">
                 <Index />
               </Route>
@@ -25,7 +27,6 @@ function App() {
           </div>
         </div>
       </Router>
-    </AuthState>
   );
 }
 
