@@ -44,11 +44,7 @@ const Home = props =>  {
     }
 
     const deleteRecord = (id) => {
-        let temp;
-        setRecords((records) => {
-            temp = records.filter(record => record.id !== id);
-        });
-        console.log(temp);
+        console.log('recored deleted');
     }
 
     const editRecord = (id) => {

@@ -1,4 +1,4 @@
-import os
+102import os
 import datetime
 from flask import Flask, request, render_template, jsonify, make_response, url_for, redirect
 from flask_restful import Resource, Api, reqparse
@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from werkzeug.security import generate_password_hash, check_password_hash
 
-app = Flask(__name__, static_folder='client/build/static', template_folder='client/build')
+app = Flask(__name__,static_folder='../client/build/static', template_folder='../client/build')
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://{}:{}@{}/{}".format(os.environ.get('PGUSER'), os.environ.get('PGPASSWORD'), os.environ.get('PGHOST'), os.environ.get('PGDATABASE'))
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -38,7 +38,7 @@ class Expenses(db.Model):
     expense_date = db.Column(db.DateTime, nullable=False)
     description = db.Column(db.String(255), nullable=False)
     purchase_place = db.Column(db.String(255), nullable=False)
-    description = db.Column(db.String(255), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
     created = db.Column(db.DateTime, nullable=False)
     modified = db.Column(db.DateTime, nullable=False)
 
@@ -74,9 +74,24 @@ class Auth(Resource):
         
 
 
-class Expenses(Resource):
-    def post(self):
-        return 'expenses'
+@app.route('/api/expense', methods=['POST'])
+def addExpense():
+    data = Expenses(
+        user_id = request.form['id'],
+        expense_date = request.form['date'],
+        description = request.form['description'],
+        purchase_place = request.form['payee'],
+        amount = request.form['amount'],
+        created = datetime.datetime.now(),
+        modified = datetime.datetime.now()
+    )
+    db.session.add(data)
+    db.session.commit()
+    db.session.refresh(data)
+    if (data.id):
+        return jsonify({"success": True}), 201
+    else:
+        return jsonify({"success": False})
 
 
 def loginUser(username, password):
@@ -88,9 +103,6 @@ def loginUser(username, password):
     else:
         return 'failed please check username and/or password'
 
-api.add_resource(User, '/user/<user_id>')
-api.add_resource(Expenses, '/expenses/<id>')
-api.add_resource(Auth, '/auth')
 
 @app.route('/register', methods=['POST'])
 def register():
