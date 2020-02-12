@@ -1,9 +1,9 @@
 import os, datetime
 from flask import Flask, render_template, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_jwt import JWT, jwt_required, current_identity
-from flask_sqlalchemy import SQLAlchemy
+import jwt
 from flask_restful import Resource, Api
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://{}:{}@{}/{}".format(os.environ.get('PGUSER'), os.environ.get('PGPASSWORD'), os.environ.get('PGHOST'), os.environ.get('PGDATABASE'))
@@ -14,6 +14,8 @@ api = Api(app)
 app.config['SECRET_KEY'] = 'secret-key'
 
 class User(db.Model):
+    __tablename__ = "user"
+
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String, nullable=False)
@@ -25,6 +27,16 @@ class User(db.Model):
     #expenses = db.relationship('Expenses', backref="payer", lazy=True)
     #auth = db.relationship('Expenses', backref="auth", lazy=True)
 
+    def __init__(self, first_name, last_name, email, password):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.email = email
+        self.password = generate_password_hash(request.form['password'],method='pbkdf2:sha256', salt_length=10)
+        self.registered_date = datetime.datetime.now()
+        self.created_at = datetime.datetime.now()
+        self.modified_at = datetime.datetime.now()
+
+
 class Auth(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -34,30 +46,29 @@ class Auth(db.Model):
 
 class Register(Resource):
     def post(self):
-        user = ''
-        if (request.form):
+        if not hasattr(request, 'data'): 
+            return {"error" : "Please complete form before submitting"}
+
+        user = User.query.filter_by(email=request.form['email']).first()
+
+        if not user:
             user = User(
-                first_name = request.form['firstname'],
-                last_name = request.form['lastname'],
-                email = request.form['email'],
-                password = generate_password_hash(request.form['password'],method='pbkdf2:sha256', salt_length=10),
-                registered_date = datetime.datetime.utcnow(),
-                created_at = datetime.datetime.utcnow(),
-                modified_at = datetime.datetime.utcnow()
+                request.form['firstname'],
+                request.form['lastname'],
+                request.form['email'],
+                request.form['password']
             )
             
-            if (user):
-                if (user):
-                    try:
-                        db.session.add(user)
-                        db.session.commit()
-                        return {'success': 'User created successfully'}, 201
-                    except:
-                        db.session.rollback()
-                        raise
+            try:
+                db.session.add(user)
+                db.session.commit()
+                return {'success': 'User created successfully'}, 201
+            except:
+                db.session.rollback()
+                raise
 
         else:
-            return {'error' : 'Please enter your the information entered and try again.'}
+            return {'error' : 'User already exists. Please login.'}
 
 class Login(Resource):
     def post(self):
@@ -66,7 +77,7 @@ class Login(Resource):
             if (user and check_password_hash(user.password, request.form['password'])):
                 auth =  Auth(
                     user_id = user.id,
-                    session = abs(hash(str(user.id) + str(datetime.datetime.now()))),
+                    session = encode_auth_token(self,user.id),
                     created_at = datetime.datetime.now(),
                     modified_at = datetime.datetime.now()
                 )
@@ -86,3 +97,28 @@ class Login(Resource):
 
 api.add_resource(Register, '/register')
 api.add_resource(Login, '/login')
+
+
+def encode_auth_token(self,user_id):
+    try:
+        payload = {
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
+            'iat': datetime.datetime.utcnow(),
+            'sub': user_id
+        }
+        return jwt.encode(
+            payload,
+            app.config.get('SECRET_KEY'),
+            algorithm='HS256'
+        )
+    except Exception as e:
+        return e
+
+def decode_auth_token(auth_token):
+    try:
+        payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'))
+        return payload['sub']
+    except jwt.ExpiredSignatureError:
+        return 'Signature expired. Please log in again.'
+    except jwt.InvalidTokenError:
+        return 'Invalid token. Please log in again.'
