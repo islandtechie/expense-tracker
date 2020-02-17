@@ -36,13 +36,35 @@ class User(db.Model):
         self.created_at = datetime.datetime.now()
         self.modified_at = datetime.datetime.now()
 
+    def encode_auth_token(self):
+        try:
+            payload = {
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
+                'iat': datetime.datetime.utcnow(),
+                'sub': self.id
+            }
+            return jwt.encode(
+                payload,
+                app.config.get('SECRET_KEY'),
+                algorithm='HS256'
+            )
+        except Exception as e:
+            return e
 
 class Auth(db.Model):
+    __tablename__ = "auth"
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    session = db.Column(db.String(255), nullable=False)
+    session = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
     modified_at = db.Column(db.DateTime, nullable=False)
+
+    def __init__(self, user_id, token):
+        self.user_id = user_id
+        self.session = token
+        self.created_at = datetime.datetime.now()
+        self.modified_at = datetime.datetime.now()
 
 class Register(Resource):
     def post(self):
@@ -62,7 +84,11 @@ class Register(Resource):
             try:
                 db.session.add(user)
                 db.session.commit()
-                return {'success': 'User created successfully'}, 201
+                print(user.id)
+                return {
+                    'success': 'User created successfully',
+                    'user_id' : user.id
+                    }, 201
             except:
                 db.session.rollback()
                 raise
@@ -75,20 +101,19 @@ class Login(Resource):
         if (request.form):
             user = User.query.filter_by(email=request.form['email']).first()
             if (user and check_password_hash(user.password, request.form['password'])):
+
                 auth =  Auth(
                     user_id = user.id,
-                    session = encode_auth_token(self,user.id),
-                    created_at = datetime.datetime.now(),
-                    modified_at = datetime.datetime.now()
+                    token = user.encode_auth_token().decode()
                 )
+
                 db.session.add(auth)
                 db.session.commit()
-                return jsonify(
-                    id=user.id,
-                    firstname=user.first_name,
-                    lastname=user.last_name,
-                    session=auth.session
-                )
+
+                return {
+                    'session_id' : auth.session,
+                    'auth_id' : auth.id
+                }
             else:
                 return 'Please check your credentials or register for an account'
 
@@ -99,20 +124,7 @@ api.add_resource(Register, '/register')
 api.add_resource(Login, '/login')
 
 
-def encode_auth_token(self,user_id):
-    try:
-        payload = {
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
-            'iat': datetime.datetime.utcnow(),
-            'sub': user_id
-        }
-        return jwt.encode(
-            payload,
-            app.config.get('SECRET_KEY'),
-            algorithm='HS256'
-        )
-    except Exception as e:
-        return e
+
 
 def decode_auth_token(auth_token):
     try:
