@@ -137,3 +137,27 @@ body {
 .login-form input::placeholder {
   color: #fff;
 }
+
+.register-page {
+  box-shadow: 1px 7px 6px 1px black;
+  margin:35px auto 0 auto;
+  width: 500px;
+  height: 650px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+
+.register-page .login-form {
+  margin-top: 15px;
+}
+
+.register-page .login-form input,
+.register-page .login-form button {
+  margin-bottom: 10px;
+}
+
+.register-page .app-login {
+  width: 100%; 
+}
