@@ -5,7 +5,7 @@ import jwt
 from flask_restful import Resource, Api
 from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__, static_folder='../static/react/static', template_folder='templates')
+app = Flask(__name__, static_folder='build', template_folder='build')
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://{}:{}@{}/{}".format(os.environ.get('PGUSER'), os.environ.get('PGPASSWORD'), os.environ.get('PGHOST'), os.environ.get('PGDATABASE'))
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
@@ -133,11 +133,6 @@ def decode_auth_token(auth_token):
         return 'Invalid token. Please log in again.'
 
 
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def index(path):
-    print(app.template_folder)
-    if path != "" and os.path.exists(app.static_folder + '/' + path):
-        return send_from_directory(app.static_folder, path)
-    else:
-        return render_template('index.html')
+@app.route('/')
+def index():
+    return render_template('index.html')
