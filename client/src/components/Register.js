@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { Redirect } from 'react-router-dom';
+const axios = require('axios');
+
 
 const Index= () => {
     const [firstName, setFirstName] = useState();
@@ -6,6 +9,7 @@ const Index= () => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [password2, setPassword2] = useState();
+    const [registrationSuccessful, setRegSucess] = useState(false);
 
     const inputFirstName = (e) => {
       setFirstName(e.target.value);
@@ -34,6 +38,19 @@ const Index= () => {
         console.log('The Email entered is: ', email);
         console.log('The Password entered is: ', password);
         console.log('The Password2 entered is: ', password2);
+
+        axios.post('/api/register', {
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          password: password
+        })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
 
     return (

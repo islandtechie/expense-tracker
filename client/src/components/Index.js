@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Index= () => {
     const [email, setEmail] = useState();
@@ -45,7 +46,7 @@ const Index= () => {
                 />
                 <button type="submit">Login</button>
               </form>
-              <h3><a href="#">Register Now!</a></h3>
+              <h3><Link to="/register">Register Now!</Link></h3>
             </div>
           </div>
     )

@@ -1,4 +1,4 @@
-import os, datetime
+import os, datetime, json
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
@@ -31,7 +31,7 @@ class User(db.Model):
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
-        self.password = generate_password_hash(request.form['password'],method='pbkdf2:sha256', salt_length=10)
+        self.password = generate_password_hash(password ,method='pbkdf2:sha256', salt_length=10)
         self.registered_date = datetime.datetime.now()
         self.created_at = datetime.datetime.now()
         self.modified_at = datetime.datetime.now()
@@ -68,19 +68,19 @@ class Auth(db.Model):
 
 class Register(Resource):
     def post(self):
-        if not hasattr(request, 'data'): 
-            return {"error" : "Please complete form before submitting"}
-
-        user = User.query.filter_by(email=request.form['email']).first()
-
-        if not user:
+        data = request.json
+        print(data['email'])
+        user = User.query.filter_by(email=data['email']).first()
+        print(user)
+        if user is not None:
+            return {'error' : 'User already exists. Please login.'}
+        else:
             user = User(
-                request.form['firstname'],
-                request.form['lastname'],
-                request.form['email'],
-                request.form['password']
+                first_name = data['firstName'],
+                last_name = data['lastName'],
+                email = data['email'],
+                password =data['password']
             )
-            
             try:
                 db.session.add(user)
                 db.session.commit()
@@ -92,9 +92,6 @@ class Register(Resource):
             except:
                 db.session.rollback()
                 raise
-
-        else:
-            return {'error' : 'User already exists. Please login.'}
 
 class Login(Resource):
     def post(self):
@@ -120,8 +117,15 @@ class Login(Resource):
         else:
             return {'error' : 'Please enter your credentials'}
 
-api.add_resource(Register, '/register')
-api.add_resource(Login, '/login')
+
+class Hey(Resource):
+    def post(self):
+        print(request)
+        
+
+api.add_resource(Register, '/api/register')
+api.add_resource(Login, '/api/login')
+api.add_resource(Hey, '/hey')
 
 def decode_auth_token(auth_token):
     try:
