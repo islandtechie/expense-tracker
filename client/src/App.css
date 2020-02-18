@@ -68,7 +68,7 @@ body {
 }
 
 .landing-page {
-  border: 1px solid black;
+  box-shadow: 1px 7px 6px 1px black;
   margin:35px auto 0 auto;
   max-width: 950px;
   width: 80vw;
