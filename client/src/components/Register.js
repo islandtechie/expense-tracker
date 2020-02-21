@@ -9,7 +9,10 @@ const Index= () => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [password2, setPassword2] = useState();
-    const [registrationSuccessful, setRegSucess] = useState(false);
+    const [redirect, setRedirect] = useState(false);
+
+    if (redirect) return <Redirect to="/" />;
+    
 
     const inputFirstName = (e) => {
       setFirstName(e.target.value);
@@ -46,7 +49,9 @@ const Index= () => {
           password: password
         })
         .then(function (response) {
-          console.log(response);
+          if (response.status === 201) {
+            setRedirect(true);
+          }
         })
         .catch(function (error) {
           console.log(error);
@@ -54,6 +59,8 @@ const Index= () => {
     }
 
     return (
+
+      
         <div className="register-page">
             <div className="app-login">
               <h3>Register</h3>

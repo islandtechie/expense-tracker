@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
-const Index= () => {
+const Index = ({setUser}) => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
+    const [sessionID, setSessionID] = useState();
+    const [redirect, setRedirect] = useState(false);
 
     const inputEmail = (e) => {
         setEmail(e.target.value)
@@ -17,6 +20,20 @@ const Index= () => {
         e.preventDefault();
         console.log('The email entered is: ', email);
         console.log('The password entered is: ', password);
+
+        axios.post('/api/login', {
+          email: email,
+          password: password
+        })
+        .then(function (response) {
+          console.log('Response: ', response.data['user']);
+          window.localStorage.setItem('session_id', response.data['session_id']);
+          window.localStorage.setItem('uid', response.data['id']);
+          setUser(response.data['user'])
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
 
     return (

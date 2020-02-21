@@ -95,9 +95,11 @@ class Register(Resource):
 
 class Login(Resource):
     def post(self):
-        if (request.form):
-            user = User.query.filter_by(email=request.form['email']).first()
-            if (user and check_password_hash(user.password, request.form['password'])):
+        data = request.json
+        if (data):
+            user = User.query.filter_by(email=data['email']).first()
+            print(user.first_name)
+            if (user and check_password_hash(user.password, data['password'])):
 
                 auth =  Auth(
                     user_id = user.id,
@@ -109,7 +111,13 @@ class Login(Resource):
 
                 return {
                     'session_id' : auth.session,
-                    'auth_id' : auth.id
+                    'auth_id' : auth.id,
+                    'user' : {
+                        'fname' : user.first_name,
+                        'lname' : user.last_name,
+                        'email' : user.email,
+                        'registered_date' : str(user.registered_date)
+                    }
                 }
             else:
                 return 'Please check your credentials or register for an account'
@@ -117,15 +125,8 @@ class Login(Resource):
         else:
             return {'error' : 'Please enter your credentials'}
 
-
-class Hey(Resource):
-    def post(self):
-        print(request)
-        
-
 api.add_resource(Register, '/api/register')
 api.add_resource(Login, '/api/login')
-api.add_resource(Hey, '/hey')
 
 def decode_auth_token(auth_token):
     try:

@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 import MainNav from './components/MainNav';
 import Index from './components/Index';
 import Register from './components/Register';
 
-function App() {
+const App = () => {
+
+  const [userLoggedIn, setLoggedInUser] = useState();
+
   return (
     <div className="App">
       <Router>
@@ -18,7 +21,7 @@ function App() {
               <Register />
             </Route>
             <Route path="/">
-              <Index />
+              <Index setUser={setLoggedInUser} />
             </Route>
           </Switch>
         </div>
