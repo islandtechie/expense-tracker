@@ -95,9 +95,15 @@ class Register(Resource):
 
 class Login(Resource):
     def post(self):
-        data = request.json
+        return {'true' : 'true'}
+        """ data = request.json
         if (data):
             user = User.query.filter_by(email=data['email']).first()
+            if (user): 
+                return {'hey' : 'hey'}
+            else:
+                return {'no': 'no'}
+
             print(user.first_name)
             if (user and check_password_hash(user.password, data['password'])):
 
@@ -118,15 +124,23 @@ class Login(Resource):
                         'email' : user.email,
                         'registered_date' : str(user.registered_date)
                     }
-                }
+                } """
             else:
                 return 'Please check your credentials or register for an account'
 
         else:
             return {'error' : 'Please enter your credentials'}
 
+class Logout(Resource):
+    def post(self):
+        data = request.json
+        print(request.json)
+        return {'success' : 'almost logged out'}
+
+
 api.add_resource(Register, '/api/register')
-api.add_resource(Login, '/api/login')
+api.add_resource(Login, '/login')
+api.add_resource(Logout, '/logout')
 
 def decode_auth_token(auth_token):
     try:
