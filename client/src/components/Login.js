@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import globalContext from '../context/globalContext';
 
 function Login() {
+
+    const GlobalContext = useContext(globalContext);
+    const Error = GlobalContext.error;
+    console.log(GlobalContext.error.isError);
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
 
@@ -15,40 +20,17 @@ function Login() {
 
     const onSubmit = (e) => {
         e.preventDefault();
+
         console.log('The email entered is: ', email);
         console.log('The password entered is: ', password);
 
-        /*axios.post('/api/login', {
-          email: email,
-          password: password
-        })
-        .then(function (response) {
-          console.log('Response: ', response.data['user']);
-          window.localStorage.setItem('session_id', response.data['session_id']);
-          window.localStorage.setItem('uid', response.data['id']);
-          setUser(response.data['user']);*/
-          //setAuth(true);
-        /*})
-        .catch(function (error) {
-          console.log(error);
-        });*/
+        GlobalContext.authenticate({'email': email, 'password': password});
     }
-
-    const fakeAuth = {
-        isAuthenticated: false,
-        authenticate(cb) {
-          this.isAuthenticated = true
-          setTimeout(cb, 100) // fake async
-        },
-        signout(cb) {
-          this.isAuthenticated = false
-          setTimeout(cb, 100) // fake async
-        }
-      }
 
     return (
         <div className="app-login">
         <h3>Login</h3>
+        { Error.isError ? <h3> Error.message </h3> : '' }
         <form onSubmit={onSubmit} className="login-form">
           <input 
               type="email" 
@@ -56,6 +38,7 @@ function Login() {
               id="email" 
               placeholder="Email" 
               onChange={inputEmail}
+              required
           />
           <input 
               type="password" 
@@ -63,6 +46,7 @@ function Login() {
               id="password" 
               placeholder="Password"
               onChange={inputPassword}
+              required
           />
           <button type="submit">Login</button>
         </form>

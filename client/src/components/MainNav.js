@@ -1,11 +1,14 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext } from 'react';
 import { Link } from "react-router-dom";
+import globalContext from '../context/globalContext';
 
-function MainNav({isAuthenticated}) {
-    if (isAuthenticated)
-    {
-        return (
-            <Fragment>
+const MainNav = () => {
+    
+    const GlobalContext = useContext(globalContext);
+    if (GlobalContext.isAuthenticated) 
+    {      
+            return (
+                <Fragment>
                 <nav className="main-nav">
                     <Link to="/">Expense Tracker</Link>
                 </nav>
@@ -15,10 +18,10 @@ function MainNav({isAuthenticated}) {
                     <Link to="/logout">Logout</Link>
                 </nav>
             </Fragment>
-        )
+            )
     }else{
-        return (
-            <Fragment>
+            return (
+                <Fragment>
                 <nav className="main-nav">
                     <Link to="/">Expense Tracker</Link>
                 </nav>
@@ -26,8 +29,9 @@ function MainNav({isAuthenticated}) {
                     <Link to="/register">Register</Link>
                 </nav>
             </Fragment>
-        )
-    }
+            )
+    }           
+        
 }
 
 export default MainNav;
