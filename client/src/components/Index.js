@@ -1,9 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Login from './Login';
+import globalContext from '../context/globalContext';
+import { Redirect } from 'react-router-dom';
 
-const Index = ({setUser, setAuth}) => {
     
 
+const Index = () => {
+    
+  const GlobalContext = useContext(globalContext); 
+
+  if (GlobalContext.isAuthenticated) {
+    return (<Redirect to='/home' />) 
+  }else{
     return (
       
         <div className="landing-page">
@@ -17,6 +25,7 @@ const Index = ({setUser, setAuth}) => {
             <Login />
           </div>
     )
+  }
 }
 
 export default Index;

@@ -18,16 +18,15 @@ const GloablState = props => {
 
     const setIsAuthenticated = (authState) => {
         console.log('isAuthenticated');
-        setTimeout(() => {
             dispatch({
                 type: 'SET_IS_AUTHENTICATED',
                 payload: authState
             })
-        }, 3000)
-        
     }
 
     const authenticate = ( creds ) => {
+
+        console.log(creds.email);
 
         axios.post('/api/login', {
             email : creds.email,
@@ -35,6 +34,7 @@ const GloablState = props => {
         })
         .then(function (response) {
           console.log('Response: ', response);
+          if ( ! state.error.isError) { setErrorMessage({'status': false, 'message': ''})}
           setIsAuthenticated(true);
           setLoggedInuser({
             'id': response.data.user.id,  

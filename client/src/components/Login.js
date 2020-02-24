@@ -5,7 +5,6 @@ import globalContext from '../context/globalContext';
 function Login() {
 
     const GlobalContext = useContext(globalContext);
-    console.log(GlobalContext.error.isError);
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
 
