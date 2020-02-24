@@ -52,7 +52,7 @@ const GloablState = props => {
             console.log("STATUS", error.response.status);
             console.log("HEADERS", error.response.headers);
 
-            setErrorMessage({'isError': true, 'message': error.response.data.error});
+            setErrorMessage({'status': true, 'message': error.response.data.error});
 
         });
     }

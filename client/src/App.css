@@ -115,11 +115,13 @@ body {
 }
 
 .login-form {
-  margin-top: 50px;
+  margin-top: 10px;
 }
 
 .login-form input,
-.login-form button {
+.login-form button,
+.login-form-error input,
+.login-form-error button  {
   background-color: rgba(15, 64, 95,.7);
   color: #fff;
   margin-bottom: 30px;
@@ -130,12 +132,19 @@ body {
   height: 80px;
 }
 
-.login-form button {
+.login-form button,
+.login-form-error button  {
   background-color: rgb(15, 64, 95);
 }
 
-.login-form input::placeholder {
+.login-form input::placeholder,
+.login-form-error input::placeholder {
   color: #fff;
+}
+
+.login-form-error input {
+  border: 1px solid;
+  border-color: red;
 }
 
 .register-page {
@@ -160,4 +169,9 @@ body {
 
 .register-page .app-login {
   width: 100%; 
+}
+
+.error {
+  color: red;
+  font-size: 1.2rem;
 }

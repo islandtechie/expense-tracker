@@ -5,7 +5,6 @@ import globalContext from '../context/globalContext';
 function Login() {
 
     const GlobalContext = useContext(globalContext);
-    const Error = GlobalContext.error;
     console.log(GlobalContext.error.isError);
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
@@ -30,12 +29,12 @@ function Login() {
     return (
         <div className="app-login">
         <h3>Login</h3>
-        { Error.isError ? <h3> Error.message </h3> : '' }
-        <form onSubmit={onSubmit} className="login-form">
+        { GlobalContext.error.isError ? <span className='error'> {GlobalContext.error.message} </span> : '' }
+        <form onSubmit={onSubmit} className={ GlobalContext.error.isError ? "login-form-error" : 'login-form' }>
           <input 
               type="email" 
               name="email" 
-              id="email" 
+              id="email"
               placeholder="Email" 
               onChange={inputEmail}
               required
