@@ -19,7 +19,7 @@ function Login() {
     const onSubmit = (e) => {
         e.preventDefault();
 
-        console.log('The email entered is: ', email);
+        console.log('The email entered is: ', email.toLowerCase());
         console.log('The password entered is: ', password);
 
         GlobalContext.authenticate({'email': email, 'password': password});

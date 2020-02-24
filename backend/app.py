@@ -50,6 +50,15 @@ class User(db.Model):
             )
         except Exception as e:
             return e
+    
+    def decode_auth_token(auth_token):
+        try:
+            payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'))
+            return payload['sub']
+        except jwt.ExpiredSignatureError:
+            return 'Signature expired. Please log in again.'
+        except jwt.InvalidTokenError:
+            return 'Invalid token. Please log in again.'
 
 class Auth(db.Model):
     __tablename__ = "auth"
@@ -139,16 +148,6 @@ class Logout(Resource):
 api.add_resource(Register, '/api/register')
 api.add_resource(Login, '/api/login')
 api.add_resource(Logout, '/logout')
-
-def decode_auth_token(auth_token):
-    try:
-        payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'))
-        return payload['sub']
-    except jwt.ExpiredSignatureError:
-        return 'Signature expired. Please log in again.'
-    except jwt.InvalidTokenError:
-        return 'Invalid token. Please log in again.'
-
 
 @app.route('/')
 def index():
