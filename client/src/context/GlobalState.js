@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const GloablState = props => {
     const initialState = {
-        isAuthenticated: false,
+        isAuthenticated: true,
         sessionID: null,
         user: {},
         error: {
@@ -60,12 +60,7 @@ const GloablState = props => {
     const setLoggedInuser = (user) => {
             dispatch({
                 type: 'LOGIN',
-                payload: {
-                    'firstName' : user.firstName,
-                    'password' : user.lastName,
-                    'email' : user.email,
-                    'sessionID' : user.sessionID
-                }
+                payload: user
             });
     }
 
@@ -77,7 +72,26 @@ const GloablState = props => {
                 'message' : error.message,
             }
         });
-}
+    }
+
+    const logout = () => {
+        console.log('logging out...');
+
+        axios.post('/api/logout', {
+            uid : state.user.id
+        })
+        .then(function (response) {
+          console.log('Response: ', response);
+          setIsAuthenticated(false);
+          setLoggedInuser({});
+          window.localStorage.clear();
+        })
+        .catch(function (error) {
+            console.log(error);
+
+        });
+        
+    }
 
 
     return (
@@ -85,7 +99,8 @@ const GloablState = props => {
             value={{
                 isAuthenticated: state.isAuthenticated,
                 authenticate,
-                error: state.error
+                error: state.error,
+                logout
             }}
         >
             {props.children}

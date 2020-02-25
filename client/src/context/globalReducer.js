@@ -9,7 +9,7 @@ export default (state, action) => {
             console.log('reach mutation');
             return {
                 ...state,
-                creds: action.payload
+                user: action.payload
             }
         case 'SET_ERROR_MESSAGE':
             console.log('reached error');

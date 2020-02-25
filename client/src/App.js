@@ -20,11 +20,6 @@ const App = () => {
         </header>
         <div className="container">
           <Switch>
-            <Route path="/logout">
-              {() => {
-                return (<p>Logout page</p>)
-              }}
-            </Route>
             <ProtectedRoute exact path="/account" component={Account} />
             <ProtectedRoute exact path="/home" component={Home} />
             <Route path="/register">

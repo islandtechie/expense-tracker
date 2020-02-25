@@ -32,3 +32,6 @@ class Auth(db.Model):
     session = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
     modified_at = db.Column(db.DateTime, nullable=False)
+
+
+db.create_all()

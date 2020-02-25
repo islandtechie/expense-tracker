@@ -134,20 +134,26 @@ class Login(Resource):
                 return {'error' : 'Please check your credentials or register for an account'}, 401
 
         else:
-            return {'error' : 'Please enter your credentials'}
-    
-    
+            return {'error' : 'Please enter your credentials'}  
 
 class Logout(Resource):
     def post(self):
         data = request.json
-        print(request.json)
-        return {'success' : 'almost logged out'}
+        
+        user = Auth.query.filter_by(user_id=data['uid']).first()
+        print(user)
+        if (user != None):
+            print('I GET HERE logging out')
+            user.session = ''
+
+            db.session.commit()
+
+            return {"success" : " Log out Successful"}
 
 
 api.add_resource(Register, '/api/register')
 api.add_resource(Login, '/api/login')
-api.add_resource(Logout, '/logout')
+api.add_resource(Logout, '/api/logout')
 
 @app.route('/')
 def index():

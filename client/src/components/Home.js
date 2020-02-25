@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+
 
 const Home = ({user}) => {
         return (
         
-            <div>
-                <p>I AM HOME</p>
-            </div>
+            <Fragment>
+                
+            </Fragment>
+                
         )
    
 }

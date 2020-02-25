@@ -5,6 +5,11 @@ import globalContext from '../context/globalContext';
 const MainNav = () => {
     
     const GlobalContext = useContext(globalContext);
+
+    const logout = () => {
+        GlobalContext.logout();
+    }
+
     if (GlobalContext.isAuthenticated) 
     {      
             return (
@@ -15,7 +20,7 @@ const MainNav = () => {
                 <nav className="user-controls">
                     <Link to="/home">Home</Link>
                     <Link to="/account">Account</Link>
-                    <Link to="/logout">Logout</Link>
+                    <button type="button" onClick={logout}>Logout</button>
                 </nav>
             </Fragment>
             )

@@ -53,8 +53,11 @@ body {
   padding-right: 10px;
 }
 
+
+
 .main-header .main-nav > a,
-.main-header .user-controls > a {
+.main-header .user-controls > a,
+.user-controls button  {
   padding: 0 5px;
   color: #fff;
   font-size: 1.3rem;
@@ -62,6 +65,14 @@ body {
   text-decoration: none;
 }
 
+.user-controls button {
+  border:none;
+  background-color: transparent;
+}
+
+.user-controls button:hover {
+  cursor: pointer;
+}
 .container {
   text-align: center;
   width: 100%;
