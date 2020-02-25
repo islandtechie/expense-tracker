@@ -1,14 +1,10 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import AddExpense from './AddExpense';
 
 
 const Home = ({user}) => {
         return (
-        
-            <Fragment>
-                <AddExpense />
-            </Fragment>
-                
+            <AddExpense />
         )
    
 }

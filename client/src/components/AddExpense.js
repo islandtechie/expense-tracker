@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react'
+import { Link } from 'react-router-dom';
 
 const AddExpense = () => {
     return (
@@ -28,11 +29,10 @@ const AddExpense = () => {
                             <td>Bought breakfast cause i was in a rush</td>
                             <td>$8.95</td>
                             <td class="actions">
-                                <a href="#"><i class="fa fa-edit" title="Edit"></i></a>
-                                <a href="#"><i class="fa fa-trash" title="Delete"></i></a>
+                                <Link to="#"><i class="fa fa-edit" title="Edit"></i></Link>
+                                <Link to="#"><i class="fa fa-trash" title="Delete"></i></Link>
                             </td>
                         </tr>
-                        
                     </tbody>
                 </table>
             </section>
