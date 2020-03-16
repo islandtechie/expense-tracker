@@ -60,6 +60,27 @@ class User(db.Model):
         except jwt.InvalidTokenError:
             return 'Invalid token. Please log in again.'
 
+class Expenses(db.Model):
+    __tablename__ = "expenses"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    payee = db.Column(db.String, nullable=False)
+    description = db.Column(db.String, nullable=False)
+    amount = db.Column(db.Integer, unique=True, nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False)
+    modified_at = db.Column(db.DateTime, nullable=False)
+
+    def __init__(self, user_id, payee, description, amount, date):
+        self.user_id = user_id
+        self.payee = payee
+        self.description = description
+        self.amount = amount
+        self.date = date
+        self.created_at = datetime.datetime.now()
+        self.modified_at = datetime.datetime.now()
+
 class Auth(db.Model):
     __tablename__ = "auth"
 
@@ -151,6 +172,7 @@ class Logout(Resource):
             return {"success" : " Log out Successful"}
 
 
+api.add_resource(Expense, '/api/expense')
 api.add_resource(Register, '/api/register')
 api.add_resource(Login, '/api/login')
 api.add_resource(Logout, '/api/logout')

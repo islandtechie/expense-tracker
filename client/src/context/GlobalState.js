@@ -11,7 +11,9 @@ const GloablState = props => {
         error: {
             isError: false,
             message: ''
-        }
+        },
+        expenses: []
+
     }
 
     const [state, dispatch] = useReducer(GlobalReducer, initialState);
@@ -93,6 +95,15 @@ const GloablState = props => {
         
     }
 
+    const addExpense = ( expense ) => {
+        console.log("State: ", expense);
+        dispatch({
+            type: 'ADD_EXPENSE',
+            payload: expense
+        });
+
+    }
+
 
     return (
         <GlobalContext.Provider
@@ -100,7 +111,9 @@ const GloablState = props => {
                 isAuthenticated: state.isAuthenticated,
                 authenticate,
                 error: state.error,
-                logout
+                logout,
+                addExpense,
+                expenses: state.expenses
             }}
         >
             {props.children}
