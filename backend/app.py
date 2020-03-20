@@ -87,7 +87,7 @@ class Expenses(db.Model):
             'payee': self.payee,
             'description' : self.description,
             'amount' : self.amount,
-            'date' : self.date
+            'date' : json.dumps(self.date, default=str)
         }
 
 class Auth(db.Model):
@@ -172,6 +172,13 @@ class Login(Resource):
                 db.session.add(auth)
                 db.session.commit()
 
+                userExpenses = Expenses.query.filter_by(user_id=user.id).all()
+                expenses = []
+                if userExpenses != None:
+                    for item in userExpenses:
+                        expenses.append(item.serialize())
+
+                    print(expenses)
                 return {
                     'session_id' : auth.session,
                     'auth_id' : auth.id,
@@ -181,7 +188,8 @@ class Login(Resource):
                         'lname' : user.last_name,
                         'email' : user.email,
                         'registered_date' : str(user.registered_date)
-                    }
+                    },
+                    'expenses' : expenses
                 }
             else:
                 return {'error' : 'Please check your credentials or register for an account'}, 401

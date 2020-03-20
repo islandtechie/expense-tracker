@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const GloablState = props => {
     const initialState = {
-        isAuthenticated: true,
+        isAuthenticated: false,
         sessionID: null,
         user: {},
         error: {
@@ -46,6 +46,8 @@ const GloablState = props => {
             'registered_date': response.data.user.registered_date,
             'sessionID' : response.data.session_id
           })
+          console.log('Expenses: ', response.data.expenses);
+          setUserExpenses(response.data.expenses);
           window.localStorage.setItem('session_id', response.data.session_id);
         })
         .catch(function (error) {
@@ -65,6 +67,13 @@ const GloablState = props => {
                 payload: user
             });
     }
+
+    const setUserExpenses = (expenses) => {
+        dispatch({
+            type: 'SET_USER_EXPENSES',
+            payload: expenses
+        });
+}
 
     const setErrorMessage = (error) => {
         dispatch({
@@ -97,7 +106,7 @@ const GloablState = props => {
 
     const addExpense = ( expense ) => {
         console.log("State: ", expense);
-        
+
         axios.post('/api/expense', expense)
         .then((response) => {
           console.log('Response: ', response.data);
