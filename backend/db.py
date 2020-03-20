@@ -40,7 +40,7 @@ class Expenses(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     payee = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
-    amount = db.Column(db.Integer, unique=True, nullable=False)
+    amount = db.Column(db.Float, nullable=False)
     date = db.Column(db.DateTime, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
     modified_at = db.Column(db.DateTime, nullable=False)

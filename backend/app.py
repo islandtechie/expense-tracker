@@ -67,7 +67,7 @@ class Expenses(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     payee = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
-    amount = db.Column(db.Integer, unique=True, nullable=False)
+    amount = db.Column(db.Float, nullable=False)
     date = db.Column(db.DateTime, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
     modified_at = db.Column(db.DateTime, nullable=False)
@@ -80,6 +80,15 @@ class Expenses(db.Model):
         self.date = date
         self.created_at = datetime.datetime.now()
         self.modified_at = datetime.datetime.now()
+    
+    def serialize(self):
+        return {
+            'id' : self.id,
+            'payee': self.payee,
+            'description' : self.description,
+            'amount' : self.amount,
+            'date' : self.date
+        }
 
 class Auth(db.Model):
     __tablename__ = "auth"
@@ -96,6 +105,29 @@ class Auth(db.Model):
         self.created_at = datetime.datetime.now()
         self.modified_at = datetime.datetime.now()
 
+class Expense(Resource):
+    def post(self):
+        data = request.json
+        print(data['payee'])
+
+        expense = Expenses(
+                user_id = 1,
+                payee = data['payee'],
+                description = data['description'],
+                amount= data['amount'],
+                date = data['date']
+            )
+        print(expense.user_id)    
+        try:
+            print(db.session.add(expense))
+            db.session.commit()
+            print(expense.id)
+            temp = Expenses.query.filter_by(id=expense.id).first()
+            print(temp.id)
+            return jsonify(expense.serialize())
+        except:
+            db.session.rollback()
+            raise
 class Register(Resource):
     def post(self):
         data = request.json

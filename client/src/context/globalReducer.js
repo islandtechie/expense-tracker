@@ -19,15 +19,8 @@ export default (state, action) => {
             }
         case 'ADD_EXPENSE':
             console.log('reached add expense');
-            return {
-                ...state,
-                expenses: [
-                    ...state.expenses,
-                    action.payload
-                ]
-            }
+            return { ...state, expenses: action.payload };
         default:
            console.log('hello');
     }
 }
-

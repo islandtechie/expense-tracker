@@ -97,11 +97,29 @@ const GloablState = props => {
 
     const addExpense = ( expense ) => {
         console.log("State: ", expense);
-        dispatch({
+        
+        axios.post('/api/expense', expense)
+        .then((response) => {
+          console.log('Response: ', response.data);
+          dispatch({
             type: 'ADD_EXPENSE',
-            payload: expense
-        });
+            payload: [...state.expenses, {
+              'id': response.data.id,  
+              'date' : response.data.date,
+              'payee' : response.data.payee,
+              'description' : response.data.description,
+              'amount' : response.data.amount
+            }]
+        })
+        })
+        .catch((error) => {
+            console.log("Error: ", error);
+            console.log("DATA ",error.response.data);
+            console.log("STATUS", error.response.status);
+            console.log("HEADERS", error.response.headers);
 
+            setErrorMessage({'status': true, 'message': error.response.data.error});
+        });
     }
 
 
