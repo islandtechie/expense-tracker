@@ -108,7 +108,6 @@ class Auth(db.Model):
 class Expense(Resource):
     def post(self):
         data = request.json
-        print(data['payee'])
 
         expense = Expenses(
                 user_id = 1,
@@ -117,13 +116,10 @@ class Expense(Resource):
                 amount= data['amount'],
                 date = data['date']
             )
-        print(expense.user_id)    
+             
         try:
-            print(db.session.add(expense))
             db.session.commit()
-            print(expense.id)
-            temp = Expenses.query.filter_by(id=expense.id).first()
-            print(temp.id)
+
             return jsonify(expense.serialize())
         except:
             db.session.rollback()
@@ -131,9 +127,9 @@ class Expense(Resource):
 class Register(Resource):
     def post(self):
         data = request.json
-        print(data['email'])
+        
         user = User.query.filter_by(email=data['email']).first()
-        print(user)
+        
         if user is not None:
             return {'error' : 'User already exists. Please login.'}
         else:
@@ -157,13 +153,14 @@ class Register(Resource):
 
 class Login(Resource):
     def post(self):
+
         data = request.json
-        if data == {}: return {'error' : 'Please fill in credentials and Try again.'}
-        if not data['email'] == '' and not data['password'] == '':
+
+        if data == {} or not data['email'] == '' and not data['password'] == '':
             user = User.query.filter_by(email=data['email']).first()
-            print(user)
+
             if (user != None and check_password_hash(user.password, data['password'])):
-                print('I GET HERE')
+
                 auth =  Auth(
                     user_id = user.id,
                     token = user.encode_auth_token().decode()
@@ -173,12 +170,13 @@ class Login(Resource):
                 db.session.commit()
 
                 userExpenses = Expenses.query.filter_by(user_id=user.id).all()
+
                 expenses = []
+
                 if userExpenses != None:
                     for item in userExpenses:
                         expenses.append(item.serialize())
 
-                    print(expenses)
                 return {
                     'session_id' : auth.session,
                     'auth_id' : auth.id,

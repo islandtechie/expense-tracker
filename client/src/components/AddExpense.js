@@ -28,6 +28,7 @@ const AddExpense = () => {
     const submitExpense = (e) => {
         e.preventDefault();
         console.log('submitted expense');
+        console.log(GlobalContext.user);
         GlobalContext.addExpense(
             {
                 date: date,
@@ -86,6 +87,7 @@ const AddExpense = () => {
                     </thead>
                     <tbody>
                         {
+                            console.log(GlobalContext.user)
                             GlobalContext.expenses.map((value, key) => {
                                 return <tr key={key}>
                                         <td>{value.date}</td>
@@ -93,8 +95,8 @@ const AddExpense = () => {
                                         <td>{value.description}</td>
                                         <td>{value.amount}</td>
                                         <td className="actions">
-                                            <Link to="#"><i className="fa fa-edit" title="Edit"></i></Link>
-                                            <Link to="#"><i className="fa fa-trash" title="Delete"></i></Link>
+                                            <Button><i className="fa fa-edit" title="Edit"></i></Button>
+                                            <Button><i className="fa fa-trash" title="Delete"></i></Button>
                                         </td>
                                     </tr>
                             })

@@ -15,7 +15,6 @@ const Index = () => {
     return (
       
         <div className="landing-page">
-          {console.log('Reached 4')}
             <div className="app-info">
               <h3>Welcome to Expense Tracker</h3>
               <p className="support-text">Conveniently add daily expenses and help you keep track of your finances.</p>
