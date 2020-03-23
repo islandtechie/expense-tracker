@@ -59,7 +59,6 @@ class User(db.Model):
             return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:
             return 'Invalid token. Please log in again.'
-
 class Expenses(db.Model):
     __tablename__ = "expenses"
 
@@ -89,7 +88,6 @@ class Expenses(db.Model):
             'amount' : self.amount,
             'date' : json.dumps(self.date, default=str)
         }
-
 class Auth(db.Model):
     __tablename__ = "auth"
 
@@ -104,7 +102,6 @@ class Auth(db.Model):
         self.session = token
         self.created_at = datetime.datetime.now()
         self.modified_at = datetime.datetime.now()
-
 class Expense(Resource):
     def post(self):
         data = request.json
@@ -124,6 +121,19 @@ class Expense(Resource):
         except:
             db.session.rollback()
             raise
+    
+    def delete(self, expense_id):
+        print(expense_id)
+        Expenses.query.filter_by(id=expense_id).delete()
+        db.session.commit()
+        print(request.args['user_id'])
+        userExpenses = Expenses.query.filter_by(user_id=request.args['user_id']).all()
+        expenses = []
+        if userExpenses != None:
+            for item in userExpenses:
+                expenses.append(item.serialize())
+
+        return {'expenses' : expenses};
 class Register(Resource):
     def post(self):
         data = request.json
@@ -150,7 +160,6 @@ class Register(Resource):
             except:
                 db.session.rollback()
                 raise
-
 class Login(Resource):
     def post(self):
 
@@ -194,7 +203,6 @@ class Login(Resource):
 
         else:
             return {'error' : 'Please enter your credentials'}  
-
 class Logout(Resource):
     def post(self):
         data = request.json
@@ -210,7 +218,7 @@ class Logout(Resource):
             return {"success" : " Log out Successful"}
 
 
-api.add_resource(Expense, '/api/expense')
+api.add_resource(Expense, '/api/expense', '/api/expense/<expense_id>')
 api.add_resource(Register, '/api/register')
 api.add_resource(Login, '/api/login')
 api.add_resource(Logout, '/api/logout')

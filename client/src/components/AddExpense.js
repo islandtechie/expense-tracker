@@ -1,5 +1,4 @@
-import React, { Fragment, useState, useContext } from 'react'
-import { Link } from 'react-router-dom';
+import React, { Fragment, useState, useContext } from 'react';
 import globalContext from '../context/globalContext';
 
 const AddExpense = () => {
@@ -11,6 +10,7 @@ const AddExpense = () => {
 
     const inputDate = (e) => {
         setDate(e.target.value);
+        console.log(GlobalContext.user);
     }
 
     const inputPayee = (e) => {
@@ -87,7 +87,6 @@ const AddExpense = () => {
                     </thead>
                     <tbody>
                         {
-                            console.log(GlobalContext.user)
                             GlobalContext.expenses.map((value, key) => {
                                 return <tr key={key}>
                                         <td>{value.date}</td>
@@ -95,8 +94,8 @@ const AddExpense = () => {
                                         <td>{value.description}</td>
                                         <td>{value.amount}</td>
                                         <td className="actions">
-                                            <Button><i className="fa fa-edit" title="Edit"></i></Button>
-                                            <Button><i className="fa fa-trash" title="Delete"></i></Button>
+                                            <button type="button" onClick={() => GlobalContext.editUserExpense(value.id)}><i className="fa fa-edit" title="Edit"></i></button>
+                                            <button type="button" onClick={() => GlobalContext.deleteUserExpense(value.id)}><i className="fa fa-trash" title="Delete"></i></button>
                                         </td>
                                     </tr>
                             })

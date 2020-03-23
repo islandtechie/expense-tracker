@@ -75,6 +75,25 @@ const GloablState = props => {
         });
 }
 
+    const deleteUserExpense = (id) => {
+        console.log("From Delete: ", id);
+
+        const URL = '/api/expense/' + id;
+
+        console.log(URL);
+        console.log(state.user.id);
+
+        axios.delete(URL, {params: {user_id : state.user.id}}
+            ).then((res) => {
+                console.log(res.data);
+                setUserExpenses(res.data.expenses);
+            });
+    }
+
+    const editUserExpense = (id) => {
+        console.log("From edit: ", id);
+    }
+
     const setErrorMessage = (error) => {
         dispatch({
             type: 'SET_ERROR_MESSAGE',
@@ -140,7 +159,10 @@ const GloablState = props => {
                 error: state.error,
                 logout,
                 addExpense,
-                expenses: state.expenses
+                expenses: state.expenses,
+                user: state.user,
+                editUserExpense,
+                deleteUserExpense
             }}
         >
             {props.children}
