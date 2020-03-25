@@ -105,9 +105,9 @@ class Auth(db.Model):
 class Expense(Resource):
     def post(self):
         data = request.json
-
+        print(data['user_id'])
         expense = Expenses(
-                user_id = 1,
+                user_id = data['user_id'],
                 payee = data['payee'],
                 description = data['description'],
                 amount= data['amount'],
@@ -115,6 +115,7 @@ class Expense(Resource):
             )
              
         try:
+            db.session.add(expense)
             db.session.commit()
 
             return jsonify(expense.serialize())

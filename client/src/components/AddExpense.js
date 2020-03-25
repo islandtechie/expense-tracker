@@ -10,7 +10,6 @@ const AddExpense = () => {
 
     const inputDate = (e) => {
         setDate(e.target.value);
-        console.log(GlobalContext.user);
     }
 
     const inputPayee = (e) => {
@@ -27,16 +26,25 @@ const AddExpense = () => {
 
     const submitExpense = (e) => {
         e.preventDefault();
-        console.log('submitted expense');
-        console.log(GlobalContext.user);
+
+        if (date === "" || payee === "" || description === "" || amount === "")
+        {
+            alert('Please make an entry to continue.')
+        }
+
         GlobalContext.addExpense(
             {
+                user_id: GlobalContext.user.id,
                 date: date,
                 payee: payee,
                 description: description,
                 amount: amount
             }
         );
+        setDate("");
+        setPayee("");
+        setDescription("");
+        setAmount("");
     }
 
     return (

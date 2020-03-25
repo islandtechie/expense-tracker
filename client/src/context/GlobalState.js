@@ -19,7 +19,6 @@ const GloablState = props => {
     const [state, dispatch] = useReducer(GlobalReducer, initialState);
 
     const setIsAuthenticated = (authState) => {
-        console.log('isAuthenticated');
             dispatch({
                 type: 'SET_IS_AUTHENTICATED',
                 payload: authState
@@ -28,14 +27,11 @@ const GloablState = props => {
 
     const authenticate = ( creds ) => {
 
-        console.log(creds.email);
-
         axios.post('/api/login', {
             email : creds.email,
             password : creds.password
         })
         .then(function (response) {
-          console.log('Response: ', response);
           if ( ! state.error.isError) { setErrorMessage({'status': false, 'message': ''})}
           setIsAuthenticated(true);
           setLoggedInuser({
@@ -45,8 +41,7 @@ const GloablState = props => {
             'email' : response.data.user.email,
             'registered_date': response.data.user.registered_date,
             'sessionID' : response.data.session_id
-          })
-          console.log('Expenses: ', response.data.expenses);
+          });
           setUserExpenses(response.data.expenses);
           window.localStorage.setItem('session_id', response.data.session_id);
         })
@@ -73,19 +68,14 @@ const GloablState = props => {
             type: 'SET_USER_EXPENSES',
             payload: expenses
         });
-}
+    }
 
     const deleteUserExpense = (id) => {
-        console.log("From Delete: ", id);
 
         const URL = '/api/expense/' + id;
 
-        console.log(URL);
-        console.log(state.user.id);
-
         axios.delete(URL, {params: {user_id : state.user.id}}
             ).then((res) => {
-                console.log(res.data);
                 setUserExpenses(res.data.expenses);
             });
     }
@@ -105,40 +95,39 @@ const GloablState = props => {
     }
 
     const logout = () => {
-        console.log('logging out...');
 
         axios.post('/api/logout', {
             uid : state.user.id
         })
         .then(function (response) {
-          console.log('Response: ', response);
           setIsAuthenticated(false);
           setLoggedInuser({});
           window.localStorage.clear();
         })
         .catch(function (error) {
             console.log(error);
-
         });
         
     }
 
     const addExpense = ( expense ) => {
-        console.log("State: ", expense);
+
+        console.log("ADD EXPENSE: ", expense);
 
         axios.post('/api/expense', expense)
         .then((response) => {
-          console.log('Response: ', response.data);
           dispatch({
-            type: 'ADD_EXPENSE',
-            payload: [...state.expenses, {
-              'id': response.data.id,  
-              'date' : response.data.date,
-              'payee' : response.data.payee,
-              'description' : response.data.description,
-              'amount' : response.data.amount
-            }]
-        })
+                type: 'ADD_EXPENSE',
+                payload: [...state.expenses, 
+                    {
+                        'id': response.data.id,  
+                        'date' : response.data.date,
+                        'payee' : response.data.payee,
+                        'description' : response.data.description,
+                        'amount' : response.data.amount
+                    }
+                ]
+            })
         })
         .catch((error) => {
             console.log("Error: ", error);
