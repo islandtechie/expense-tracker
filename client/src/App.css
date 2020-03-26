@@ -187,7 +187,8 @@ body {
   font-size: 1.2rem;
 }
 
-.expense-input {
+.expense-input,
+.expense-edit {
   margin-top: 20px;
   height: 60px;
   display: flex;
@@ -195,6 +196,12 @@ body {
   align-items: center;
 }
 
+.expense-edit {
+  margin-top: 0px;
+}
+
+.expense-edit > form > input, 
+.expense-edit > form > button,
 .expense-input > form > input, 
 .expense-input > form > button {
   width: 200px;
@@ -205,17 +212,20 @@ body {
   font-weight: bold;
 }
 
+.expense-edit > form > input,
 .expense-input > form > input {
   border: 1px solid rgb(15, 64, 95);
   padding: 0 5px;
   margin-right: 5px;
 }
 
+.expense-edit > form > input:first-child,
 .expense-input > form > input:first-child {
   border: 1px solid rgb(15, 64, 95);
   width: 220px;
 }
 
+.expense-edit > form > button,
 .expense-input > form > button {
   background-color: rgb(15, 64, 95);
   color: whitesmoke;

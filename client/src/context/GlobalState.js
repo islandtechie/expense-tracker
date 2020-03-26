@@ -12,7 +12,29 @@ const GloablState = props => {
             isError: false,
             message: ''
         },
-        expenses: []
+        expenses: [
+            {
+                'id': 19,  
+                'date' : "response",
+                'payee' : "response",
+                'description' : "response",
+                'amount' : "response"
+            },
+            {
+                'id': 20,  
+                'date' : "response",
+                'payee' : "response",
+                'description' : "response",
+                'amount' : "response"
+            },
+            {
+                'id': 21,  
+                'date' : "response",
+                'payee' : "response",
+                'description' : "response",
+                'amount' : "response"
+            }
+        ]
 
     }
 
@@ -82,6 +104,14 @@ const GloablState = props => {
 
     const editUserExpense = (id) => {
         console.log("From edit: ", id);
+
+        const URL = '/api/expense/' + id;
+
+        axios.put(URL, {params: {user_id : state.user.id}}
+            ).then((res) => {
+                //setUserExpenses(res.data.expenses);
+            });
+
     }
 
     const setErrorMessage = (error) => {

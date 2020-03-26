@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useContext } from 'react';
+import React, { Fragment, useState, useContext, useRef } from 'react';
 import globalContext from '../context/globalContext';
 
 const AddExpense = () => {
@@ -7,6 +7,7 @@ const AddExpense = () => {
     const [payee, setPayee ] = useState();
     const [description, setDescription ] = useState();
     const [amount, setAmount ] = useState();
+    const expenseInputForm = useRef(null);
 
     const inputDate = (e) => {
         setDate(e.target.value);
@@ -41,16 +42,26 @@ const AddExpense = () => {
                 amount: amount
             }
         );
-        setDate("");
-        setPayee("");
-        setDescription("");
-        setAmount("");
+    }
+
+    const editUserExpense = (id) => {
+
+        console.log(id);
+
+        console.log(GlobalContext.expenses.find((expense) => expense.id === id));
+
+        const record = GlobalContext.expenses.find((expense) => expense.id === id);
+
+        expenseInputForm.current.elements.namedItem("date").value = record.date;
+        expenseInputForm.current.elements.namedItem("payee").value = record.payee;
+        expenseInputForm.current.elements.namedItem("description").value = record.description;
+        expenseInputForm.current.elements.namedItem("amount").value = record.amount;
     }
 
     return (
         <Fragment>
             <section className="expense-input">
-                <form className="expense-input_form" onSubmit={submitExpense}>
+                <form className="expense-input_form" onSubmit={submitExpense}  ref={expenseInputForm}>
                     <input 
                         type="date" 
                         name="date" 
@@ -102,7 +113,7 @@ const AddExpense = () => {
                                         <td>{value.description}</td>
                                         <td>{value.amount}</td>
                                         <td className="actions">
-                                            <button type="button" onClick={() => GlobalContext.editUserExpense(value.id)}><i className="fa fa-edit" title="Edit"></i></button>
+                                            <button type="button" onClick={() => editUserExpense(value.id)}><i className="fa fa-edit" title="Edit"></i></button>
                                             <button type="button" onClick={() => GlobalContext.deleteUserExpense(value.id)}><i className="fa fa-trash" title="Delete"></i></button>
                                         </td>
                                     </tr>
