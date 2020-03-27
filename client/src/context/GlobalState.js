@@ -6,7 +6,7 @@ import axios from 'axios';
 const GloablState = props => {
     const initialState = {
         isAuthenticated: false,
-        istransactionSuccessful: false,
+        isTransactionSuccessful: false,
         sessionID: null,
         user: {},
         error: {
@@ -14,7 +14,7 @@ const GloablState = props => {
             message: ''
         },
         expenses: [
-            /*{
+            {
                 'id': 19,  
                 'date' : "response",
                 'payee' : "response",
@@ -34,7 +34,7 @@ const GloablState = props => {
                 'payee' : "response",
                 'description' : "response",
                 'amount' : "response"
-            }*/
+            }
         ]
 
     }
@@ -103,10 +103,10 @@ const GloablState = props => {
             });
     }
 
-    const editUserExpense = (id) => {
-        console.log("From edit: ", id);
+    const editExpense = (record) => {
+        console.log("From edit: ", record);
 
-        const URL = '/api/expense/' + id;
+        const URL = '/api/expense/' + record.id;
 
         axios.put(URL, {params: {user_id : state.user.id}}
             ).then((res) => {
@@ -159,8 +159,6 @@ const GloablState = props => {
                     }
                 ]
             })
-            
-            transactionSuccessful(true);
         })
         .catch((error) => {
             console.log("Error: ", error);
@@ -170,13 +168,6 @@ const GloablState = props => {
 
             setErrorMessage({'status': true, 'message': error.response.data.error});
         });
-    }
-
-    const transactionSuccessful = (result) => {
-        dispatch({
-            type: 'TRANSACTION_SUCCESSFUL',
-            payload: result
-        })
     }
 
 
@@ -190,7 +181,7 @@ const GloablState = props => {
                 addExpense,
                 expenses: state.expenses,
                 user: state.user,
-                editUserExpense,
+                editExpense,
                 deleteUserExpense
             }}
         >

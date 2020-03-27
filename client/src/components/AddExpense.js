@@ -8,6 +8,7 @@ const AddExpense = () => {
     const [description, setDescription ] = useState();
     const [amount, setAmount ] = useState();
     const [editMode, setEditMode ] = useState();
+    const [expense_id, setExpenseID] = useState();
     const expenseInputForm = useRef(null);
 
     const inputDate = (e) => {
@@ -34,23 +35,64 @@ const AddExpense = () => {
             alert('Please make an entry to continue.')
         }
 
+        if ( editMode === true )
+        {
+            
+           console.log('in edit mode');
+           console.log(GlobalContext.isTransactionSuccessful);
+
+            GlobalContext.editExpense(
+                {
+                    id: expense_id,
+                    date: date,
+                    payee: payee,
+                    description: description,
+                    amount: amount
+                }
+            );       
+        }else{
+
+            GlobalContext.addExpense(
+                {
+                    user_id: GlobalContext.user.id,
+                    date: date,
+                    payee: payee,
+                    description: description,
+                    amount: amount
+                }
+            );
+        }
+        
+            clearForm();
+
+        
     }
 
-   /*  const editUserExpense = (id) => {
+    const clearForm = () => {
+        expenseInputForm.current.elements.namedItem("date").value = '';
+        expenseInputForm.current.elements.namedItem("payee").value = '';
+        expenseInputForm.current.elements.namedItem("description").value = '';
+        expenseInputForm.current.elements.namedItem("amount").value = ''; 
+    }
 
-        console.log(id);
-
-        console.log(GlobalContext.expenses.find((expense) => expense.id === id));
+   const editUserExpense = (id) => {
 
         setEditMode(true);
 
         const record = GlobalContext.expenses.find((expense) => expense.id === id);
 
+        setExpenseID(record.id);
+
+        setDate(record.date)
         expenseInputForm.current.elements.namedItem("date").value = record.date;
+
+        setPayee(record.payee);
         expenseInputForm.current.elements.namedItem("payee").value = record.payee;
+        setDescription(record.description);
         expenseInputForm.current.elements.namedItem("description").value = record.description;
+        setAmount(record.amount);
         expenseInputForm.current.elements.namedItem("amount").value = record.amount;
-    } */
+    }
 
     return (
         <Fragment>
@@ -107,7 +149,7 @@ const AddExpense = () => {
                                         <td>{value.description}</td>
                                         <td>{value.amount}</td>
                                         <td className="actions">
-                                            <button type="button" onClick={() => editUserExpense(value.id)}><i className="fa fa-edit" title="Edit"></i></button>
+                                        <button type="button" onClick={() => editUserExpense(value.id)}><i className="fa fa-edit" title="Edit"></i></button>
                                             <button type="button" onClick={() => GlobalContext.deleteUserExpense(value.id)}><i className="fa fa-trash" title="Delete"></i></button>
                                         </td>
                                     </tr>
