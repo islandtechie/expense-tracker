@@ -22,6 +22,10 @@ export default (state, action) => {
                 ...state,
                 expenses: action.payload
             };
+        case 'TRANSACTION_SUCCESSFUL':
+            return {
+                ...state, istransactionSuccessful: action.payload
+            }
         default:
            console.log('hello');
     }

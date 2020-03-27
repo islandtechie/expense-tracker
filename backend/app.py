@@ -1,4 +1,5 @@
-import os, datetime, json
+import os, json
+from datetime import datetime, date
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
@@ -39,8 +40,8 @@ class User(db.Model):
     def encode_auth_token(self):
         try:
             payload = {
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
-                'iat': datetime.datetime.utcnow(),
+                'exp': datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
+                'iat': datetime.utcnow(),
                 'sub': self.id
             }
             return jwt.encode(
@@ -67,7 +68,7 @@ class Expenses(db.Model):
     payee = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
     amount = db.Column(db.Float, nullable=False)
-    date = db.Column(db.Date, nullable=False)
+    date = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
     modified_at = db.Column(db.DateTime, nullable=False)
 
@@ -77,8 +78,8 @@ class Expenses(db.Model):
         self.description = description
         self.amount = amount
         self.date = date
-        self.created_at = datetime.datetime.now()
-        self.modified_at = datetime.datetime.now()
+        self.created_at = datetime.now()
+        self.modified_at = datetime.now()
     
     def serialize(self):
         return {
@@ -179,14 +180,6 @@ class Login(Resource):
 
             if (user != None and check_password_hash(user.password, data['password'])):
 
-                auth =  Auth(
-                    user_id = user.id,
-                    token = user.encode_auth_token().decode()
-                )
-
-                db.session.add(auth)
-                db.session.commit()
-
                 userExpenses = Expenses.query.filter_by(user_id=user.id).all()
 
                 expenses = []
@@ -196,8 +189,6 @@ class Login(Resource):
                         expenses.append(item.serialize())
 
                 return {
-                    'session_id' : auth.session,
-                    'auth_id' : auth.id,
                     'user' : {
                         'id' : user.id,
                         'fname' : user.first_name,

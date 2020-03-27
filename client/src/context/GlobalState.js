@@ -6,6 +6,7 @@ import axios from 'axios';
 const GloablState = props => {
     const initialState = {
         isAuthenticated: false,
+        istransactionSuccessful: false,
         sessionID: null,
         user: {},
         error: {
@@ -13,7 +14,7 @@ const GloablState = props => {
             message: ''
         },
         expenses: [
-            {
+            /*{
                 'id': 19,  
                 'date' : "response",
                 'payee' : "response",
@@ -33,7 +34,7 @@ const GloablState = props => {
                 'payee' : "response",
                 'description' : "response",
                 'amount' : "response"
-            }
+            }*/
         ]
 
     }
@@ -158,6 +159,8 @@ const GloablState = props => {
                     }
                 ]
             })
+            
+            transactionSuccessful(true);
         })
         .catch((error) => {
             console.log("Error: ", error);
@@ -167,6 +170,13 @@ const GloablState = props => {
 
             setErrorMessage({'status': true, 'message': error.response.data.error});
         });
+    }
+
+    const transactionSuccessful = (result) => {
+        dispatch({
+            type: 'TRANSACTION_SUCCESSFUL',
+            payload: result
+        })
     }
 
 

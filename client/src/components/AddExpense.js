@@ -7,6 +7,7 @@ const AddExpense = () => {
     const [payee, setPayee ] = useState();
     const [description, setDescription ] = useState();
     const [amount, setAmount ] = useState();
+    const [editMode, setEditMode ] = useState();
     const expenseInputForm = useRef(null);
 
     const inputDate = (e) => {
@@ -33,22 +34,15 @@ const AddExpense = () => {
             alert('Please make an entry to continue.')
         }
 
-        GlobalContext.addExpense(
-            {
-                user_id: GlobalContext.user.id,
-                date: date,
-                payee: payee,
-                description: description,
-                amount: amount
-            }
-        );
     }
 
-    const editUserExpense = (id) => {
+   /*  const editUserExpense = (id) => {
 
         console.log(id);
 
         console.log(GlobalContext.expenses.find((expense) => expense.id === id));
+
+        setEditMode(true);
 
         const record = GlobalContext.expenses.find((expense) => expense.id === id);
 
@@ -56,7 +50,7 @@ const AddExpense = () => {
         expenseInputForm.current.elements.namedItem("payee").value = record.payee;
         expenseInputForm.current.elements.namedItem("description").value = record.description;
         expenseInputForm.current.elements.namedItem("amount").value = record.amount;
-    }
+    } */
 
     return (
         <Fragment>
