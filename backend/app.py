@@ -25,8 +25,6 @@ class User(db.Model):
     registered_date = db.Column(db.DateTime, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
     modified_at = db.Column(db.DateTime, nullable=False)
-    #expenses = db.relationship('Expenses', backref="payer", lazy=True)
-    #auth = db.relationship('Expenses', backref="auth", lazy=True)
 
     def __init__(self, first_name, last_name, email, password):
         self.first_name = first_name
@@ -106,7 +104,6 @@ class Auth(db.Model):
 class Expense(Resource):
     def post(self):
         data = request.json
-        print(data['date'])
         expense = Expenses(
                 user_id = data['user_id'],
                 payee = data['payee'],
@@ -125,10 +122,8 @@ class Expense(Resource):
             raise
     
     def delete(self, expense_id):
-        print(expense_id)
         Expenses.query.filter_by(id=expense_id).delete()
         db.session.commit()
-        print(request.args['user_id'])
         userExpenses = Expenses.query.filter_by(user_id=request.args['user_id']).all()
         expenses = []
         if userExpenses != None:
@@ -138,7 +133,6 @@ class Expense(Resource):
         return {'expenses' : expenses};
 
     def put(self, expense_id):
-        print(expense_id)
         data = request.json
         expense = Expenses.query.filter_by(id=expense_id).first()
 
@@ -160,8 +154,6 @@ class Expense(Resource):
             db.session.rollback()
             pass
 
-        
-
 class Register(Resource):
     def post(self):
         data = request.json
@@ -180,7 +172,6 @@ class Register(Resource):
             try:
                 db.session.add(user)
                 db.session.commit()
-                print(user.id)
                 return {
                     'success': 'User created successfully',
                     'user_id' : user.id
@@ -226,13 +217,9 @@ class Logout(Resource):
         data = request.json
         
         user = Auth.query.filter_by(user_id=data['uid']).first()
-        print(user)
         if (user != None):
-            print('I GET HERE logging out')
             user.session = ''
-
             db.session.commit()
-
             return {"success" : " Log out Successful"}
 
 

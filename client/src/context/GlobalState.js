@@ -13,29 +13,7 @@ const GloablState = props => {
             isError: false,
             message: ''
         },
-        expenses: [
-            {
-                'id': 19,  
-                'date' : "response",
-                'payee' : "response",
-                'description' : "response",
-                'amount' : "response"
-            },
-            {
-                'id': 20,  
-                'date' : "response",
-                'payee' : "response",
-                'description' : "response",
-                'amount' : "response"
-            },
-            {
-                'id': 21,  
-                'date' : "response",
-                'payee' : "response",
-                'description' : "response",
-                'amount' : "response"
-            }
-        ]
+        expenses: []
 
     }
 
@@ -69,10 +47,10 @@ const GloablState = props => {
           window.localStorage.setItem('session_id', response.data.session_id);
         })
         .catch(function (error) {
-            console.log("Error: ", error);
-            console.log("DATA ",error.response.data);
-            console.log("STATUS", error.response.status);
-            console.log("HEADERS", error.response.headers);
+            //console.log("Error: ", error);
+            //console.log("DATA ",error.response.data);
+            //console.log("STATUS", error.response.status);
+            //console.log("HEADERS", error.response.headers);
 
             setErrorMessage({'status': true, 'message': error.response.data.error});
 
@@ -103,8 +81,7 @@ const GloablState = props => {
             });
     }
 
-    const editExpense = (record) => {
-        console.log("From edit: ", record);
+    const editExpense = (record) => {/
 
         const URL = '/api/expense/' + record.id;
 

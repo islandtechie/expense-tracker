@@ -37,9 +37,6 @@ const AddExpense = () => {
 
         if ( editMode === true )
         {
-            
-           console.log('in edit mode');
-           console.log(GlobalContext.isTransactionSuccessful);
 
             GlobalContext.editExpense(
                 {
@@ -64,10 +61,7 @@ const AddExpense = () => {
                 }
             );
         }
-
             clearForm();
-
-        
     }
 
     const clearForm = () => {
@@ -93,7 +87,6 @@ const AddExpense = () => {
 
         setDate(record.date)
         expenseInputForm.current.elements.namedItem("date").value = record.date;
-
         setPayee(record.payee);
         expenseInputForm.current.elements.namedItem("payee").value = record.payee;
         setDescription(record.description);

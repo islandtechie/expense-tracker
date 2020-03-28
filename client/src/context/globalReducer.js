@@ -23,6 +23,8 @@ export default (state, action) => {
                 expenses: action.payload
             };
         default:
-           console.log('hello');
+           return {
+               ...state
+           }
     }
 }

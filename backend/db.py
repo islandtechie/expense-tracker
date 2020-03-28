@@ -20,8 +20,6 @@ class User(db.Model):
     registered_date = db.Column(db.DateTime, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
     modified_at = db.Column(db.DateTime, nullable=False)
-    #expenses = db.relationship('Expenses', backref="payer", lazy=True)
-    #auth = db.relationship('Expenses', backref="auth", lazy=True)
 
 
 class Auth(db.Model):
