@@ -1,33 +1,41 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom'
-
+import {BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 import MainNav from './components/MainNav';
 import Index from './components/Index';
+import Register from './components/Register';
 import Home from './components/Home';
+import Account from './components/Account';
+import ProtectedRoute from './components/ProtectedRoute';
 
+import GlobalState from './context/GlobalState';
 
-function App() {
-  return (
+const App = () => {
+  return  (
+    <GlobalState>
+    <div className="App">
       <Router>
-        <div className="main-container">
-          <header className="main-header">
-            <div className="logo"><Link to="/">Expense Tracker</Link></div>
-            <MainNav />
-          </header>
-          <div className="main-content">
-            <Switch>
-              <Route path="/home">
-                  <Home />
-              </Route>
-              <Route path="/">
-                <Index />
-              </Route>
-            </Switch>
-          </div>
+        <header className="main-header">
+          <MainNav />
+        </header>
+        <div className="container">
+          <Switch>
+            <ProtectedRoute exact path="/account" component={Account} />
+            <ProtectedRoute exact path="/home" component={Home} />
+            <Route path="/register">
+              <Register />
+            </Route>
+            <Route path="/">
+              <Index  />
+            </Route>
+          </Switch>
         </div>
       </Router>
+    </div>
+    </GlobalState>
   );
 }
+
+
 
 export default App;
