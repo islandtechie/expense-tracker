@@ -108,9 +108,9 @@ const GloablState = props => {
 
         const URL = '/api/expense/' + record.id;
 
-        axios.put(URL, {params: {user_id : state.user.id}}
+        axios.put(URL, record
             ).then((res) => {
-                //setUserExpenses(res.data.expenses);
+                setUserExpenses(res.data.expenses);
             });
 
     }

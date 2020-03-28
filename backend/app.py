@@ -33,9 +33,9 @@ class User(db.Model):
         self.last_name = last_name
         self.email = email
         self.password = generate_password_hash(password ,method='pbkdf2:sha256', salt_length=10)
-        self.registered_date = datetime.datetime.now()
-        self.created_at = datetime.datetime.now()
-        self.modified_at = datetime.datetime.now()
+        self.registered_date = datetime.now()
+        self.created_at = datetime.now()
+        self.modified_at = datetime.now()
 
     def encode_auth_token(self):
         try:
@@ -139,8 +139,26 @@ class Expense(Resource):
 
     def put(self, expense_id):
         print(expense_id)
-        print(request)
-        exp = Expenses.query.filter_by(id=expense_id).first()
+        data = request.json
+        expense = Expenses.query.filter_by(id=expense_id).first()
+
+        expense.date = data['date']
+        expense.payee = data['payee']
+        expense.description = data['description']
+        expense.amount = data['amount']
+
+        try:
+            db.session.commit()
+            userExpenses = Expenses.query.filter_by(user_id=expense.user_id).all()
+            expenses = []
+            if userExpenses != None:
+                for item in userExpenses:
+                    expenses.append(item.serialize())
+
+            return {'expenses' : expenses};
+        except:
+            db.session.rollback()
+            pass
 
         
 

@@ -49,7 +49,9 @@ const AddExpense = () => {
                     description: description,
                     amount: amount
                 }
-            );       
+            );
+            
+            setEditMode(false);
         }else{
 
             GlobalContext.addExpense(
@@ -62,7 +64,7 @@ const AddExpense = () => {
                 }
             );
         }
-        
+
             clearForm();
 
         
@@ -72,7 +74,13 @@ const AddExpense = () => {
         expenseInputForm.current.elements.namedItem("date").value = '';
         expenseInputForm.current.elements.namedItem("payee").value = '';
         expenseInputForm.current.elements.namedItem("description").value = '';
-        expenseInputForm.current.elements.namedItem("amount").value = ''; 
+        expenseInputForm.current.elements.namedItem("amount").value = '';
+
+        setExpenseID('');
+        setDate('')
+        setPayee('');
+        setDescription('');
+        setAmount('');
     }
 
    const editUserExpense = (id) => {
