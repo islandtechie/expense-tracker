@@ -81,7 +81,7 @@ const GloablState = props => {
             });
     }
 
-    const editExpense = (record) => {/
+    const editExpense = (record) => {
 
         const URL = '/api/expense/' + record.id;
 

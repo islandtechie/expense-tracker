@@ -19,7 +19,6 @@ const MainNav = () => {
                 </nav>
                 <nav className="user-controls">
                     <Link to="/home">Home</Link>
-                    <Link to="/account">Account</Link>
                     <button type="button" onClick={logout}>Logout</button>
                 </nav>
             </Fragment>
